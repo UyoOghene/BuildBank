@@ -43,4 +43,16 @@ body {
     width: 100%;
     box-sizing: border-box;
   }
+  button {
+    background-color: #ff4d4d;
+    border: none;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #cc0000;
+  }
   

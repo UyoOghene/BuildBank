@@ -25,15 +25,20 @@
   </thead>
   <tbody>
     <% project.entries.forEach(entry => { %>
-      <tr>
-        <td><%= entry.description %></td>
-        <td><%= entry.amount %></td>
-        <td><%= entry.type %></td>
-        <td><%= entry.bank %></td>
-        <td><%= entry.comment %></td>
-        <td><%= new Date(entry.createdAt).toLocaleString() %></td>
-      </tr>
-    <% }) %>
+        <tr>
+          <td><%= entry.description %></td>
+          <td><%= entry.amount %></td>
+          <td><%= entry.comment %></td>
+          <td><%= entry.type %></td>
+          <td><%= entry.bank %></td>
+          <td><%= entry.createdAt.toLocaleString() %></td>
+          <td>
+            <form action="/projects/<%= project._id %>/entries/<%= entry._id %>?_method=DELETE" method="POST">
+              <button type="submit" onclick="return confirm('Delete this entry?')">🗑️</button>
+            </form>
+          </td>
+        </tr>
+      <% }) %>
   </tbody>
 </table>
 

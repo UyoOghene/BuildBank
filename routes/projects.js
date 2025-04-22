@@ -69,5 +69,19 @@ router.get('/:id/export', async (req, res) => {
   await workbook.xlsx.write(res);
   res.end();
 });
-
+router.delete('/:id/entries/:entryId', async (req, res) => {
+    const { id, entryId } = req.params;
+    const project = await Project.findById(id);
+  
+    project.entries = project.entries.filter(entry => entry._id.toString() !== entryId);
+    await project.save();
+  
+    res.redirect(`/projects/${id}`);
+  });
+  
+    router.delete('/:id', async (req, res) => {
+    await Project.findByIdAndDelete(req.params.id);
+    res.redirect('/projects');
+  });
+    
 module.exports = router;
