@@ -1,0 +1,44 @@
+<% layout('layout') %>
+<h2><%= project.name %></h2>
+<form action="/projects/<%= project._id %>/entries" method="POST">
+  <input type="text" name="description" placeholder="Description" required />
+  <input type="number" name="amount" placeholder="Amount" required />
+  <input type="text" name="comment" placeholder="Comment" />
+  <input type="text" name="bank" placeholder="Bank" required />
+  <select name="type">
+    <option value="income">Income</option>
+    <option value="expense">Expense</option>
+  </select>
+  <button type="submit">Add Entry</button>
+</form>
+
+<table>
+  <thead>
+    <tr>
+      <th>Description</th>
+      <th>Amount</th>
+      <th>Type</th>
+      <th>Bank</th>
+      <th>Comment</th>
+      <th>Date</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% project.entries.forEach(entry => { %>
+      <tr>
+        <td><%= entry.description %></td>
+        <td><%= entry.amount %></td>
+        <td><%= entry.type %></td>
+        <td><%= entry.bank %></td>
+        <td><%= entry.comment %></td>
+        <td><%= new Date(entry.createdAt).toLocaleString() %></td>
+      </tr>
+    <% }) %>
+  </tbody>
+</table>
+
+<p><strong>Total Income:</strong> ₦<%= totalIncome %></p>
+<p><strong>Total Expenses:</strong> ₦<%= totalExpenses %></p>
+<p><strong>Balance:</strong> ₦<%= balance %></p>
+
+<a href="/projects/<%= project._id %>/export">Export to Excel</a>

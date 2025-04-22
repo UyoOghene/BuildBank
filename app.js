@@ -1,64 +1,29 @@
 const express = require('express');
-const bodyParser = require('body-parser');
-const ExcelJS = require('exceljs');
-const path = require('path');
-const { data } = require('./data');
-
+const mongoose = require('mongoose');
+const methodOverride = require('method-override');
+const projectRoutes = require('./routes/projects');
 const app = express();
+const engine = require('ejs-mate');
+
+app.engine('ejs', engine);
 app.set('view engine', 'ejs');
+
+
+mongoose.connect('mongodb://localhost:27017/construction-tracker', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+
+app.set('view engine', 'ejs');
+app.use(express.urlencoded({ extended: true }));
+app.use(methodOverride('_method'));
 app.use(express.static('public'));
-app.use(bodyParser.urlencoded({ extended: true }));
 
-// Home Page
 app.get('/', (req, res) => {
-  let income = 0;
-  let expenses = 0;
-
-  data.forEach(item => {
-    const total = item.amount * item.quantity;
-    if (item.type === 'income') income += total;
-    else expenses += total;
+    res.render('index.ejs');
   });
+  
+app.use('/projects', projectRoutes);
 
-  res.render('index', { data, income, expenses });
-});
+app.listen(3000, () =>  console.log('App running on http://localhost:3000'));
 
-// Add Entry
-app.post('/add', (req, res) => {
-  const { description, amount, quantity, type } = req.body;
-  data.push({
-    description,
-    amount: parseFloat(amount),
-    quantity: parseInt(quantity),
-    type
-  });
-  res.redirect('/');
-});
-
-// Export to Excel
-app.get('/export', async (req, res) => {
-  const workbook = new ExcelJS.Workbook();
-  const worksheet = workbook.addWorksheet('Expenses');
-
-  worksheet.columns = [
-    { header: 'Description', key: 'description' },
-    { header: 'Amount', key: 'amount' },
-    { header: 'Quantity', key: 'quantity' },
-    { header: 'Type', key: 'type' }
-  ];
-
-  data.forEach(entry => worksheet.addRow(entry));
-
-  res.setHeader(
-    'Content-Type',
-    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-  );
-  res.setHeader('Content-Disposition', 'attachment; filename=expenses.xlsx');
-
-  await workbook.xlsx.write(res);
-  res.end();
-});
-
-app.listen(3000, () => {
-  console.log('App running on http://localhost:3000');
-});
