@@ -49,8 +49,10 @@ router.get('/:id/export', async (req, res) => {
   const workbook = new ExcelJS.Workbook();
   const sheet = workbook.addWorksheet('Entries');
 
+  // Define columns
   sheet.columns = [
     { header: 'Description', key: 'description', width: 20 },
+    { header: 'Floor', key: 'floor', width: 10 },
     { header: 'Amount', key: 'amount', width: 10 },
     { header: 'Type', key: 'type', width: 10 },
     { header: 'Comment', key: 'comment', width: 20 },
@@ -58,10 +60,37 @@ router.get('/:id/export', async (req, res) => {
     { header: 'Date', key: 'createdAt', width: 20 },
   ];
 
+  // Add all entry rows
   project.entries.forEach(entry => {
-    sheet.addRow(entry);
+    sheet.addRow({
+      description: entry.description,
+      floor: entry.floor,
+      amount: entry.amount,
+      type: entry.type,
+      comment: entry.comment,
+      bank: entry.bank,
+      createdAt: entry.createdAt.toLocaleString(),
+    });
   });
 
+  // Calculate totals
+  const totalIncome = project.entries
+    .filter(e => e.type === 'income')
+    .reduce((sum, e) => sum + e.amount, 0);
+
+  const totalExpenses = project.entries
+    .filter(e => e.type === 'expense')
+    .reduce((sum, e) => sum + e.amount, 0);
+
+  const balance = totalIncome - totalExpenses;
+
+  // Add empty row then totals
+  sheet.addRow([]);
+  sheet.addRow(['', '', 'Total Income:', totalIncome]);
+  sheet.addRow(['', '', 'Total Expenses:', totalExpenses]);
+  sheet.addRow(['', '', 'Balance:', balance]);
+
+  // Set headers and download
   res.setHeader(
     'Content-Disposition',
     `attachment; filename=${project.name}-entries.xlsx`
@@ -69,6 +98,7 @@ router.get('/:id/export', async (req, res) => {
   await workbook.xlsx.write(res);
   res.end();
 });
+
 router.delete('/:id/entries/:entryId', async (req, res) => {
     const { id, entryId } = req.params;
     const project = await Project.findById(id);

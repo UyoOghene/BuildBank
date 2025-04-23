@@ -6,6 +6,7 @@ const entrySchema = new mongoose.Schema({
   type: { type: String, enum: ['income', 'expense'] },
   comment: String,
   bank: String,
+  floor: String,
   createdAt: { type: Date, default: Date.now },
 });
 
