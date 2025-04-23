@@ -6,7 +6,7 @@
           <a href="/projects/<%= project._id %>"><%= project.name %></a>
       
           <span><form action="/projects/<%= project._id %>?_method=DELETE" method="POST" style="display:inline;">
-            <button class="delbtn" type="submit" onclick="return confirm('Delete this project and all its entries?')">🗑️</button>
+            <button id="delbtn" type="submit" onclick="return confirm('Delete this project and all its entries?')">🗑️</button>
           </form>
         </span>
         </li>

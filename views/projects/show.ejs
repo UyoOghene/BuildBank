@@ -46,7 +46,7 @@
           <td><%= entry.createdAt.toLocaleString() %></td>
           <td>
             <form action="/projects/<%= project._id %>/entries/<%= entry._id %>?_method=DELETE" method="POST">
-              <button class="delbtn" type="submit" onclick="return confirm('Delete this entry?')">🗑️</button>
+              <button id="delbtn" type="submit" onclick="return confirm('Delete this entry?')">🗑️</button>
             </form>
           </td>
         </tr>
