@@ -12,7 +12,7 @@
         "dest": "app.js",
         "headers": {
           "Cache-Control": "no-store",
-          "Access-Control-Allow-Origin": "https://vercellesson.vercel.app",
+          "Access-Control-Allow-Origin": "https://build-bank-xi.vercel.app/",
           "Access-Control-Allow-Credentials": "true"
         }
       }

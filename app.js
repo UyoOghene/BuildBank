@@ -92,7 +92,7 @@ const sessionConfig = {
     secure: true, 
     sameSite: 'none', 
     domain: process.env.NODE_ENV === 'production' 
-      ? '.vercellesson.vercel.app' 
+      ? '.build-bank-xi.vercel.app' 
       : undefined,
     maxAge: 1000 * 60 * 60 * 24 * 7
   }
