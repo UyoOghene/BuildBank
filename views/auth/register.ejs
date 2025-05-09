@@ -1,0 +1,103 @@
+<% layout('layout') %>
+
+<div class="auth-container">
+  <div class="auth-card">
+    <h2>Create Account</h2>
+    <form class="auth-form" id="registerForm" action="/register" method="POST">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" required>
+        <div class="error-message" id="username-error">Username is required</div>
+      </div>
+      
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required 
+               pattern="^(?=.*[A-Z]).{5,}$"
+               title="Password must be at least 5 characters with one uppercase letter">
+        <div class="error-message" id="password-error">
+          Password must be at least 5 characters with one uppercase letter
+        </div>
+        <div class="password-strength">
+          Requirements: 5+ characters, 1 uppercase letter
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="confirmPassword">Confirm Password</label>
+        <input type="password" id="confirmPassword" name="confirmPassword" required>
+        <div class="error-message" id="confirm-error">Passwords must match</div>
+      </div>
+      
+      <button type="submit" class="auth-btn">Register</button>
+      
+      <div class="auth-links">
+        <p>Already have an account? <a href="/login">Login here</a></p>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  document.getElementById('registerForm').addEventListener('submit', function(e) {
+    let isValid = true;
+    
+    // Username validation
+    const username = document.getElementById('username').value;
+    if (!username) {
+      document.getElementById('username-error').style.display = 'block';
+      isValid = false;
+    } else {
+      document.getElementById('username-error').style.display = 'none';
+    }
+    
+    // Password validation
+    const password = document.getElementById('password').value;
+    const passwordPattern = /^(?=.*[A-Z]).{5,}$/;
+    
+    if (!password || !passwordPattern.test(password)) {
+      document.getElementById('password-error').style.display = 'block';
+      isValid = false;
+    } else {
+      document.getElementById('password-error').style.display = 'none';
+    }
+    
+    // Confirm password validation
+    const confirmPassword = document.getElementById('confirmPassword').value;
+    if (password !== confirmPassword) {
+      document.getElementById('confirm-error').style.display = 'block';
+      isValid = false;
+    } else {
+      document.getElementById('confirm-error').style.display = 'none';
+    }
+    
+    if (!isValid) {
+      e.preventDefault();
+    }
+  });
+
+  // Real-time password validation
+  document.getElementById('password').addEventListener('input', function() {
+    const password = this.value;
+    const errorElement = document.getElementById('password-error');
+    
+    if (password.length < 5 || !/[A-Z]/.test(password)) {
+      errorElement.style.display = 'block';
+    } else {
+      errorElement.style.display = 'none';
+    }
+  });
+
+  // Real-time confirm password validation
+  document.getElementById('confirmPassword').addEventListener('input', function() {
+    const password = document.getElementById('password').value;
+    const confirmPassword = this.value;
+    const errorElement = document.getElementById('confirm-error');
+    
+    if (password !== confirmPassword) {
+      errorElement.style.display = 'block';
+    } else {
+      errorElement.style.display = 'none';
+    }
+  });
+</script>

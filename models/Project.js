@@ -14,6 +14,11 @@ const projectSchema = new mongoose.Schema({
   name: String,
   entries: [entrySchema],
   createdAt: { type: Date, default: Date.now },
+  author: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }
+  
 });
 
 module.exports = mongoose.model('Project', projectSchema);

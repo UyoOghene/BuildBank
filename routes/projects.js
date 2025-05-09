@@ -3,9 +3,17 @@ const router = express.Router();
 const Project = require('../models/Project');
 const ExcelJS = require('exceljs');
 
+function isLoggedIn(req, res, next) {
+  if (!req.isAuthenticated()) {
+    return res.redirect('/login');
+  }
+  next();
+}
+
+
 // Show all projects
-router.get('/', async (req, res) => {
-  const projects = await Project.find();
+router.get('/', isLoggedIn, async (req, res) => {
+  const projects = await Project.find({ author: req.user._id });
   res.render('projects/index', { projects });
 });
 
@@ -14,15 +22,15 @@ router.get('/new', (req, res) => {
   res.render('projects/new');
 });
 
-router.post('/', async (req, res) => {
+router.post('/', isLoggedIn, async (req, res) => {
   const { name } = req.body;
-  const project = new Project({ name });
+  const project = new Project({ name, author: req.user._id });
   await project.save();
   res.redirect(`/projects/${project._id}`);
 });
 
 // View a project
-router.get('/:id', async (req, res) => {
+router.get('/:id',isLoggedIn, async (req, res) => {
   const project = await Project.findById(req.params.id);
   const totalIncome = project.entries
     .filter(e => e.type === 'income')

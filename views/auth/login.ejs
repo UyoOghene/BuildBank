@@ -1,0 +1,55 @@
+<% layout('layout') %>
+
+
+<div class="auth-container">
+  <div class="auth-card">
+    <h2>Welcome Back</h2>
+    <form class="auth-form" id="loginForm" action="/login" method="POST">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" required>
+        <div class="error-message" id="username-error">Username is required</div>
+      </div>
+      
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required>
+        <div class="error-message" id="password-error">Password is required</div>
+      </div>
+      
+      <button type="submit" class="auth-btn">Login</button>
+      
+      <div class="auth-links">
+        <p>Don't have an account? <a href="/register">Register here</a></p>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  document.getElementById('loginForm').addEventListener('submit', function(e) {
+    let isValid = true;
+    
+    // Username validation
+    const username = document.getElementById('username').value;
+    if (!username) {
+      document.getElementById('username-error').style.display = 'block';
+      isValid = false;
+    } else {
+      document.getElementById('username-error').style.display = 'none';
+    }
+    
+    // Password validation
+    const password = document.getElementById('password').value;
+    if (!password) {
+      document.getElementById('password-error').style.display = 'block';
+      isValid = false;
+    } else {
+      document.getElementById('password-error').style.display = 'none';
+    }
+    
+    if (!isValid) {
+      e.preventDefault();
+    }
+  });
+</script>

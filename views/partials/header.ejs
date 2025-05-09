@@ -1,9 +1,23 @@
 <header>
+  <div class="header-left">
     <h1>Build-bank</h1>
-    <nav>
-      <a href="/projects">All Projects</a>
-      <a href="/projects/new">New Project</a>
-    </nav>
-  </header>
+    <% if (currentUser) { %>
+      <span class="username">Welcome, <%= currentUser.username %></span>
+    <% } %>
+  </div>
   
-  
+  <nav>
+    <a href="/projects">All Projects</a>
+    <a href="/projects/new">New Project</a>
+    <% if (currentUser) { %>
+      <form action="/logout" method="POST" class="logout-form">
+        <button type="submit" id="logout-btn" class="logout-btn">Logout</button>
+      </form>
+    <% } else { %>
+      <div class="Nav-auth-links">
+        <a href="/login">Sign-in</a>
+        <a href="/register">Create Account</a>
+      </div>
+    <% } %>
+  </nav>
+</header>
